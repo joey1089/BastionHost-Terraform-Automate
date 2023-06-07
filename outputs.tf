@@ -5,5 +5,5 @@ output "ec2_remote_access" {
 
 output "instance_public_ip" {
   description = "Public IP address of the Jenkins EC2 instance"
-  value       = "Jenkins Server Public IP: ${aws_instance.BastionHost-Uec2I.public_ip}"
+  value       = "Bastion Host Public IP: ${aws_instance.BastionHost-Uec2I.public_ip}"
 }
