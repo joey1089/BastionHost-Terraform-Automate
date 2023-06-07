@@ -7,8 +7,12 @@ variable "vpc_tag" {
   default = "custom-vpc"
 }
 
-variable "subnet_cidr" {
-  default = "10.10.0.0/24"
+variable "subnet_cidr_bhec2" {
+  default = "10.10.1.0/24"
+}
+
+variable "subnet_cidr_pec2" {
+  default = "10.10.2.0/24"
 }
 
 variable "subnet_tag" {
@@ -29,4 +33,8 @@ variable "instance_type" {
 
 variable "ssh_key_name" {
   default = "key-pair-jens"
+}
+
+variable "security_group_name" {
+  default = "security-group-SG"
 }
