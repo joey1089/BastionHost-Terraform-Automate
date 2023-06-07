@@ -14,6 +14,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_subnet" "subnet_public_bastion" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.subnet_cidr_bhec2
+  availability_zone = "us-east-1a"
   map_public_ip_on_launch = true
 
   tags = {
@@ -26,7 +27,7 @@ resource "aws_subnet" "subnet_public_bastion" {
 resource "aws_subnet" "subnet_private" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.subnet_cidr_pec2
-  map_public_ip_on_launch = false
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = var.subnet_tag
@@ -134,7 +135,7 @@ resource "aws_key_pair" "generated" {
 # EC2 Instance - BastionHost -Ubuntu, 22.04 LTS
 resource "aws_instance" "BastionHost-Uec2I" {
   ami             = "ami-053b0d53c279acc90"  #ami-053b0d53c279acc90 #t3.micro also can use free tier t2.micro
-  instance_type   = "t3.micro"
+  instance_type   = "t2.micro"
   key_name        = var.ssh_key_name
   security_groups = [aws_security_group.bastion-host-sg.id]
   subnet_id       = aws_subnet.subnet_public_bastion.id
