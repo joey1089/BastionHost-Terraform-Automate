@@ -6,7 +6,7 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
 
   tags = {
-    Name = var.vpc_tag
+    Name = var.vpc_custom
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_subnet" "subnet_private" {
   availability_zone = "us-east-1b"
 
   tags = {
-    Name = var.subnet_tag
+    Name = var.subnet_custom
   }
 }
 

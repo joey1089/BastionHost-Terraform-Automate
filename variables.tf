@@ -3,7 +3,7 @@ variable "vpc_cidr" {
   default = "10.10.0.0/16"
 }
 
-variable "vpc_tag" {
+variable "vpc_custom" {
   default = "custom-vpc"
 }
 
@@ -15,7 +15,7 @@ variable "subnet_cidr_pec2" {
   default = "10.10.2.0/24"
 }
 
-variable "subnet_tag" {
+variable "subnet_custom" {
   default = "custom-subnet"
 }
 
