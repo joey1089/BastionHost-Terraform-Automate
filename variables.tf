@@ -31,8 +31,8 @@ variable "instance_type" {
   default = "t3.micro"
 }
 
-variable "ssh_key_name" {
-  default = "key-pair-jens"
+variable "common_ssh_key" {
+  default = "common_ssh_key"
 }
 
 variable "security_group_name" {

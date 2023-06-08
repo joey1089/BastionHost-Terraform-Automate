@@ -1,6 +1,6 @@
-output "ec2_remote_access" {
+output "remote_access_key" {
   description = "EC2 Remote Access"
-  value       = "ssh -i ${local_file.private_key_pem.filename} ec2-user@${aws_instance.BastionHost-Uec2I.public_ip}"
+  value       = "ssh -i ${local_file.private_key_pem.filename} ubuntu@${aws_instance.BastionHost-Uec2I.public_ip}"
 }
 
 output "instance_public_ip" {

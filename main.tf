@@ -54,11 +54,6 @@ resource "aws_default_route_table" "default_route" {
   }
 }
 
-# Public IP and add to Security Group
-data "external" "myipaddr" {
-  program = ["bash", "-c", "curl -s 'https://ipinfo.io/json'"]
-}
-
 # Security Group
 resource "aws_security_group" "bastion-host-sg" {
   name_prefix = var.security_group_name
@@ -123,20 +118,20 @@ resource "tls_private_key" "generated" {
 
 resource "local_file" "private_key_pem" {
   content         = tls_private_key.generated.private_key_pem
-  filename        = "${var.ssh_key_name}.pem"
+  filename        = "${var.common_ssh_key}.pem"
   file_permission = "0400"
 }
 
 resource "aws_key_pair" "generated" {
-  key_name   = var.ssh_key_name
+  key_name   = var.common_ssh_key
   public_key = tls_private_key.generated.public_key_openssh
 }
 
-# EC2 Instance - BastionHost -Ubuntu, 22.04 LTS
+# Public EC2 Instance - BastionHost -Ubuntu, 22.04 LTS
 resource "aws_instance" "BastionHost-Uec2I" {
-  ami             = "ami-053b0d53c279acc90"  #ami-053b0d53c279acc90 #t3.micro also can use free tier t2.micro
-  instance_type   = "t2.micro"
-  key_name        = var.ssh_key_name
+  ami             = "ami-053b0d53c279acc90"  #ami-053b0d53c279acc90 #also use free tier t2.micro
+  instance_type   = "t3.micro"
+  key_name        = var.common_ssh_key
   security_groups = [aws_security_group.bastion-host-sg.id]
   subnet_id       = aws_subnet.subnet_public_bastion.id
   
@@ -146,21 +141,30 @@ resource "aws_instance" "BastionHost-Uec2I" {
     throughput            = 500
     delete_on_termination = true
   }
+
+  tags = {
+    Name = "Bastion-Host-Uec2I"
+
+  }
 }
 
-# EC2 Instance - Ubuntu -Ubuntu, 22.04 LTS
+# Private EC2 Instance - Ubuntu, 22.04 LTS
 resource "aws_instance" "ubuntu-instance" {
-  ami             = "ami-053b0d53c279acc90"  #ami-053b0d53c279acc90 #t3.micro
+  ami             = "ami-053b0d53c279acc90"  
   instance_type   = "t2.micro"
-  key_name        = var.ssh_key_name
-  security_groups = [aws_security_group.bastion-host-sg.id]
+  key_name        = var.common_ssh_key
+  security_groups = [aws_security_group.private_sg.id]
   subnet_id = aws_subnet.subnet_private.id
 
 
   root_block_device {
-    volume_type           = "gp3"
+    volume_type           = "gp3" #Faster then regular gp3 and cost less
     volume_size           = 10
     throughput            = 300
     delete_on_termination = true
+  }
+
+  tags = {
+    Name = "ubuntu-pvt-instance"
   }
 }
